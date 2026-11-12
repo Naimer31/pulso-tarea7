@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PULSO · Trabaja mejor, no más</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 48 24" aria-hidden="true"><polyline points="0,12 12,12 17,3 24,21 30,8 34,12 48,12" /></svg>
+      <span>PULSO</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="dashboard" role="tab">📊 Dashboard</button>
+      <button class="tab" data-view="reunion" role="tab">🎙️ Reunión → Tareas</button>
+      <button class="tab" data-view="tablero" role="tab">🗂️ Tablero</button>
+      <button class="tab" data-view="reporte" role="tab">📄 Reporte</button>
+    </nav>
+    <button id="reset" class="ghost" title="Restaurar datos de ejemplo">↺ Reiniciar</button>
+  </header>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="hero">
+        <h1>¿Cómo está tu equipo hoy?</h1>
+        <p>Carga de trabajo y energía de cada persona. Ajusta la energía con el control para simular el check-in diario.</p>
+      </div>
+      <div class="toolbar">
+        <div class="index-card">
+          <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-bg" cx="60" cy="60" r="50" />
+            <circle id="ring-fg" class="ring-fg" cx="60" cy="60" r="50" />
+          </svg>
+          <div><span id="st-index">0</span><small>Índice PULSO<br />salud del equipo (0–100)</small></div>
+        </div>
+        <div class="toolbar-actions">
+          <button id="btn-rebalance" class="primary">⚖️ Rebalancear equipo</button>
+          <button id="btn-add" class="ghost">➕ Agregar persona</button>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span id="st-carga">0%</span><small>Carga promedio</small></div>
+        <div class="stat"><span id="st-energia">0</span><small>Energía promedio (1–5)</small></div>
+        <div class="stat"><span id="st-tareas">0</span><small>Tareas activas</small></div>
+        <div class="stat alert"><span id="st-riesgo">0</span><small>Personas en riesgo</small></div>
+      </div>
+      <div id="alerts"></div>
+      <div id="team" class="team"></div>
+    </section>
+
+    <!-- REUNION -->
+    <section id="view-reunion" class="view">
+      <div class="hero">
+        <h1>De la reunión a las tareas</h1>
+        <p>Escribe o dicta lo que se habló. PULSO detecta las tareas y las reparte según habilidad, carga y energía.</p>
+      </div>
+      <div class="meeting">
+        <textarea id="meeting-text" rows="6" placeholder="Ej.: Hay que arreglar el bug del login, diseñar la nueva landing y preparar el informe de ventas para el viernes."></textarea>
+        <div class="actions">
+          <button id="btn-ejemplo" class="ghost">✨ Usar ejemplo</button>
+          <button id="btn-mic" class="ghost">🎤 Dictar</button>
+          <button id="btn-generar" class="primary">⚡ Generar y asignar tareas</button>
+        </div>
+        <p id="mic-status" class="muted"></p>
+      </div>
+      <div id="processing" class="processing hidden">
+        <div class="pulse-line"><svg viewBox="0 0 120 24"><polyline points="0,12 30,12 38,3 48,21 58,6 64,12 120,12" /></svg></div>
+        <span>Analizando la reunión…</span>
+      </div>
+      <div id="results" class="results"></div>
+    </section>
+
+    <!-- TABLERO -->
+    <section id="view-tablero" class="view">
+      <div class="hero">
+        <h1>Tablero del equipo</h1>
+        <p>Cada tarea muestra a quién se asignó y por qué. Muévela con las flechas.</p>
+      </div>
+      <div class="board">
+        <div class="col" data-status="pendiente"><h3>📝 Pendiente <em></em></h3><div class="list"></div></div>
+        <div class="col" data-status="progreso"><h3>🚧 En progreso <em></em></h3><div class="list"></div></div>
+        <div class="col" data-status="hecho"><h3>✅ Hecho <em></em></h3><div class="list"></div></div>
+      </div>
+    </section>
+    <!-- REPORTE -->
+    <section id="view-reporte" class="view">
+      <div class="hero">
+        <h1>Reporte del equipo</h1>
+        <p>Resumen automático para el líder, con recomendaciones. Se puede guardar como PDF.</p>
+      </div>
+      <div class="actions left no-print"><button id="btn-pdf" class="primary">⬇️ Descargar PDF</button></div>
+      <div id="report" class="report"></div>
+    </section>
+  </main>
+
+  <!-- MODAL: agregar persona -->
+  <dialog id="modal-add">
+    <form id="form-add" method="dialog">
+      <h3>➕ Agregar persona al equipo</h3>
+      <label>Nombre completo<input name="name" required maxlength="40" placeholder="Ej.: Ana Flores" /></label>
+      <label>Rol<input name="role" required maxlength="40" placeholder="Ej.: Desarrolladora" /></label>
+      <fieldset>
+        <legend>Habilidades</legend>
+        <label class="chk"><input type="checkbox" name="skills" value="desarrollo" /> desarrollo</label>
+        <label class="chk"><input type="checkbox" name="skills" value="pruebas" /> pruebas</label>
+        <label class="chk"><input type="checkbox" name="skills" value="diseño" /> diseño</label>
+        <label class="chk"><input type="checkbox" name="skills" value="datos" /> datos</label>
+        <label class="chk"><input type="checkbox" name="skills" value="comunicación" /> comunicación</label>
+        <label class="chk"><input type="checkbox" name="skills" value="general" checked /> general</label>
+      </fieldset>
+      <label>Carga actual: <b id="add-load-val">30%</b><input type="range" name="load" min="0" max="100" value="30" /></label>
+      <label>Energía hoy: <b id="add-energy-val">4/5</b><input type="range" name="energy" min="1" max="5" value="4" /></label>
+      <div class="actions">
+        <button type="button" class="ghost" id="add-cancel">Cancelar</button>
+        <button type="submit" class="primary">Agregar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <footer>PULSO · Tarea 7 · Pista: Futuro del Trabajo — prototipo funcional</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
