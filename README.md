@@ -5,7 +5,7 @@ Copiloto de IA que convierte lo hablado en una reunión en tareas y las reparte 
 🌐 **Web en línea:** https://pulso-tarea7.onrender.com (desplegada en Render; se actualiza sola con cada push a `main`)
 
 ## Contenido
-- `PULSO_Tarea7.pptx` — presentación de 6 diapositivas (con notas del orador).
+- `PULSO_Tarea7.pptx` — presentación de 7 diapositivas (con notas del orador).
 - `web/` — prototipo funcional (HTML, CSS y JavaScript, sin instalar nada y sin internet).
 
 ## Cómo abrir la web
